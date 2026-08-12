@@ -437,9 +437,8 @@
     grid-template-columns:1fr 2fr;
     gap:18px;
     padding:20px 0;
-    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
   }
-  .xp-row:last-child{border-bottom:1px solid var(--line);}
   .xp-head strong{display:block;font-size:16px;font-weight:600;}
   .xp-head span{
     display:block;
@@ -561,7 +560,7 @@
     .sheet{opacity:1;transform:none;transition:none;}
   }
 
-  section, footer{scroll-margin-top:calc(var(--tb-height));}
+  section, footer{scroll-margin-top:calc(var(--tb-height) - 28px);}
 </style>
 </head>
 <body>
