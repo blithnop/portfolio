@@ -421,13 +421,6 @@
     border-color:var(--ink);
   }
   
-  .gallery-index{
-    font-family:var(--font-mono);
-    font-size:11px;
-    color:var(--ink-soft);
-    letter-spacing:.06em;
-  }
-  
   @media (max-width:900px){
     .gallery-card{
       flex:0 0 70%;
@@ -494,9 +487,14 @@
 
   /* ---------- Footer / contact sheet ---------- */
   footer.dark-sheet{
+    background:var(--dark);
+    color:var(--dark-text);
     min-height:calc(100vh - var(--tb-height));
     display:flex;
     align-items:center;
+    padding-top:80px;
+    padding-bottom:40px;
+    border-bottom:none;
   }
   .contact-inner{
     max-width:1120px;
