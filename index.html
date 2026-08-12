@@ -494,10 +494,9 @@
 
   /* ---------- Footer / contact sheet ---------- */
   footer.dark-sheet{
-    background:var(--dark);
-    color:var(--dark-text);
-    padding-top:80px;
-    padding-bottom:40px;
+    min-height:calc(100vh - var(--tb-height));
+    display:flex;
+    align-items:center;
   }
   .contact-inner{
     max-width:1120px;
@@ -612,7 +611,7 @@
         <line x1="40" y1="157" x2="480" y2="157" stroke="#1D4E89" stroke-width="1" opacity="0.35"/>
       </svg>
     </div>
-    <p class="dwg-no">DWG NO. JJV—2026 · SHEET 01/05 · REV A</p>
+    <p class="dwg-no">DWG NO. JJV—2026 · SHEET 01/06 · REV A</p>
     <h1>JOSUÉ JIMÉNEZ<br>VILLARREAL</h1>
     <p class="role">ENGINEER IN AERONAUTICS — DESIGN, MANUFACTURING &amp; SIMULATION</p>
     <p class="tagline">Mechatronics foundation. Skilled in analytical and simulation-driven design, along with the 
@@ -631,7 +630,7 @@ validating a concept in simulation and then refining it with cross-functional te
   <!-- ============ SHEET 02 — PROYECTOS ============ -->
   <section id="proyectos" class="sheet" data-sheet-num="02">
     <div class="sheet-titleblock">
-      <span class="sheet-eyebrow">SHEET 02/05</span>
+      <span class="sheet-eyebrow">SHEET 02/06</span>
       <h2>Featured projects</h2>
       <span class="sheet-note">Projects developed during my academic career</span>
     </div>
@@ -697,11 +696,166 @@ validating a concept in simulation and then refining it with cross-functional te
 
     </div>
   </section>
-
-  <!-- ============ SHEET 03 — EXPERIENCIA ============ -->
-  <section id="experiencia" class="sheet" data-sheet-num="03">
+  <!-- ============ SHEET 03 — DESIGN GALLERY ============ -->
+  <section id="galeria" class="sheet" data-sheet-num="03">
+  
     <div class="sheet-titleblock">
-      <span class="sheet-eyebrow">SHEET 03/05</span>
+      <span class="sheet-eyebrow">SHEET 03/06</span>
+      <h2>Design gallery</h2>
+      <span class="sheet-note">Selected design work and personal projects</span>
+    </div>
+  
+    <div class="gallery-wrap">
+  
+      <div class="gallery-track" id="galleryTrack">
+  
+        <!-- Design 01 -->
+        <article class="gallery-card">
+          <div class="gallery-image">
+            PROJECT IMAGE<br>
+            REPLACE WITH YOUR DESIGN
+          </div>
+  
+          <span class="tag-cat tag-diseno">Mechanical design</span>
+  
+          <h3>Sprayer mechanism component</h3>
+  
+          <p>
+            Mechanical component designed for a spraying mechanism,
+            including CAD development, component selection and
+            design validation.
+          </p>
+  
+          <div class="tool-tags">
+            <span>Creo</span>
+            <span>GD&amp;T</span>
+            <span>Design validation</span>
+          </div>
+        </article>
+  
+        <!-- Design 02 -->
+        <article class="gallery-card">
+          <div class="gallery-image">
+            PROJECT IMAGE<br>
+            REPLACE WITH YOUR DESIGN
+          </div>
+  
+          <span class="tag-cat tag-diseno">Product design</span>
+  
+          <h3>Prototype &amp; enclosure design</h3>
+  
+          <p>
+            Prototype developed from concept to manufacturable design,
+            focusing on fit, assembly, tolerances and practical
+            manufacturing constraints.
+          </p>
+  
+          <div class="tool-tags">
+            <span>SolidWorks</span>
+            <span>3D Printing</span>
+            <span>DFM</span>
+          </div>
+        </article>
+  
+        <!-- Design 03 -->
+        <article class="gallery-card">
+          <div class="gallery-image">
+            PROJECT IMAGE<br>
+            REPLACE WITH YOUR DESIGN
+          </div>
+  
+          <span class="tag-cat tag-diseno">Composite design</span>
+  
+          <h3>Composite structure</h3>
+  
+          <p>
+            Composite component developed through laminate definition,
+            structural analysis and manufacturing planning using
+            carbon fiber and honeycomb materials.
+          </p>
+  
+          <div class="tool-tags">
+            <span>ANSYS ACP</span>
+            <span>FEA</span>
+            <span>Composites</span>
+          </div>
+        </article>
+  
+        <!-- Design 04 -->
+        <article class="gallery-card">
+          <div class="gallery-image">
+            PROJECT IMAGE<br>
+            REPLACE WITH YOUR DESIGN
+          </div>
+  
+          <span class="tag-cat tag-diseno">Aerospace</span>
+  
+          <h3>Aerodynamic structure</h3>
+  
+          <p>
+            Aeronautical design study combining CAD modeling,
+            analytical calculations and simulation to evaluate
+            aerodynamic and structural performance.
+          </p>
+  
+          <div class="tool-tags">
+            <span>Creo</span>
+            <span>CFD</span>
+            <span>FEA</span>
+          </div>
+        </article>
+  
+        <!-- Design 05 -->
+        <article class="gallery-card">
+          <div class="gallery-image">
+            PROJECT IMAGE<br>
+            REPLACE WITH YOUR DESIGN
+          </div>
+  
+          <span class="tag-cat tag-diseno">Mechatronics</span>
+  
+          <h3>Sensor-based mechanism</h3>
+  
+          <p>
+            Mechatronic prototype integrating mechanical design,
+            sensors and control elements, developed from concept
+            through functional testing.
+          </p>
+  
+          <div class="tool-tags">
+            <span>CAD</span>
+            <span>Python</span>
+            <span>Prototype</span>
+          </div>
+        </article>
+  
+      </div>
+  
+      <div class="gallery-controls">
+  
+        <span class="gallery-index" id="galleryIndex">
+          01 / 05
+        </span>
+  
+        <div class="gallery-buttons">
+          <button class="gallery-btn" id="galleryPrev" aria-label="Previous project">
+            ←
+          </button>
+  
+          <button class="gallery-btn" id="galleryNext" aria-label="Next project">
+            →
+          </button>
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  </section>
+  <!-- ============ SHEET 03 — EXPERIENCIA ============ -->
+  <section id="experiencia" class="sheet" data-sheet-num="04">
+    <div class="sheet-titleblock">
+      <span class="sheet-eyebrow">SHEET 04/06</span>
       <h2>Professional experience</h2>
       <p class="sheet-note">Key points</p>
     </div>
@@ -729,9 +883,9 @@ validating a concept in simulation and then refining it with cross-functional te
   </section>
 
   <!-- ============ SHEET 04 — EDUCACIÓN + HABILIDADES ============ -->
-  <section id="educacion" class="sheet" data-sheet-num="04">
+  <section id="educacion" class="sheet" data-sheet-num="05">
     <div class="sheet-titleblock">
-      <span class="sheet-eyebrow">SHEET 04/05</span>
+      <span class="sheet-eyebrow">SHEET 05/06</span>
       <h2>Education &amp; Skills</h2>
     </div>
 
@@ -781,9 +935,9 @@ validating a concept in simulation and then refining it with cross-functional te
 </main>
 
 <!-- ============ SHEET 05 — CONTACTO ============ -->
-<footer id="contacto" class="sheet dark-sheet" data-sheet-num="05">
+<footer id="contacto" class="sheet dark-sheet" data-sheet-num="06">
   <div class="contact-inner">
-    <span class="sheet-eyebrow">SHEET 05/05</span>
+    <span class="sheet-eyebrow">SHEET 06/06</span>
     <h2>Let’s work together.</h2>
     <p class="tagline">Open to engineering opportunities in design, simulation, and manufacturing. I’d be happy to share more details about any of these projects.
 </p>
@@ -793,34 +947,224 @@ validating a concept in simulation and then refining it with cross-functional te
     </div>
     <div class="sign-off">
       <span>JOSUÉ JIMÉNEZ VILLARREAL — NUEVO LEÓN, MÉXICO</span>
-      <span>JJV—2026 · SHEET 05/05 · END</span>
+      <span>JJV—2026 · SHEET 06/06 · END</span>
     </div>
   </div>
 </footer>
 
 <script>
-  (function(){
-    var ticks = Array.prototype.slice.call(document.querySelectorAll('.tb-tick'));
-    var sheets = Array.prototype.slice.call(document.querySelectorAll('.sheet'));
+(function(){
 
-    var revealObserver = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if (entry.isIntersecting) entry.target.classList.add('in-view');
-      });
-    }, { threshold: 0.12 });
-    sheets.forEach(function(s){ revealObserver.observe(s); });
+  var ticks = Array.prototype.slice.call(
+    document.querySelectorAll('.tb-tick')
+  );
 
-    var navObserver = new IntersectionObserver(function(entries){
+  var sheets = Array.prototype.slice.call(
+    document.querySelectorAll('.sheet')
+  );
+
+
+  /* ---------- Sheet reveal animation ---------- */
+
+  var revealObserver = new IntersectionObserver(
+    function(entries){
       entries.forEach(function(entry){
-        if (!entry.isIntersecting) return;
-        var id = entry.target.getAttribute('id');
-        ticks.forEach(function(t){
-          t.classList.toggle('active', t.getAttribute('href') === '#' + id);
-        });
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+        }
       });
-    }, { threshold: 0.5, rootMargin: '-64px 0px -40% 0px' });
-    sheets.forEach(function(s){ navObserver.observe(s); });
-  })();
+    },
+    {
+      threshold:0.08
+    }
+  );
+
+  sheets.forEach(function(sheet){
+    revealObserver.observe(sheet);
+  });
+
+
+  /* ---------- Active navigation ---------- */
+
+  function updateActiveSection(){
+
+    var viewportCenter = window.innerHeight / 2;
+    var closestSheet = null;
+    var closestDistance = Infinity;
+
+    sheets.forEach(function(sheet){
+
+      var rect = sheet.getBoundingClientRect();
+
+      var sheetCenter =
+        rect.top + (rect.height / 2);
+
+      var distance =
+        Math.abs(viewportCenter - sheetCenter);
+
+      if(
+        rect.bottom > 0 &&
+        rect.top < window.innerHeight &&
+        distance < closestDistance
+      ){
+        closestDistance = distance;
+        closestSheet = sheet;
+      }
+
+    });
+
+    if(!closestSheet) return;
+
+    var activeId =
+      closestSheet.getAttribute('id');
+
+    ticks.forEach(function(tick){
+
+      tick.classList.toggle(
+        'active',
+        tick.getAttribute('href') === '#' + activeId
+      );
+
+    });
+
+  }
+
+
+  window.addEventListener(
+    'scroll',
+    updateActiveSection,
+    {passive:true}
+  );
+
+  window.addEventListener(
+    'resize',
+    updateActiveSection
+  );
+
+  updateActiveSection();
+
+
+  /* ---------- Design gallery ---------- */
+
+  var track =
+    document.getElementById('galleryTrack');
+
+  var prev =
+    document.getElementById('galleryPrev');
+
+  var next =
+    document.getElementById('galleryNext');
+
+  var index =
+    document.getElementById('galleryIndex');
+
+  var cards =
+    track
+      ? Array.prototype.slice.call(
+          track.querySelectorAll('.gallery-card')
+        )
+      : [];
+
+
+  function updateGalleryIndex(){
+
+    if(!track || !cards.length) return;
+
+    var current = 0;
+
+    var smallestDistance = Infinity;
+
+    cards.forEach(function(card, i){
+
+      var distance =
+        Math.abs(
+          card.offsetLeft -
+          track.scrollLeft
+        );
+
+      if(distance < smallestDistance){
+        smallestDistance = distance;
+        current = i;
+      }
+
+    });
+
+    index.textContent =
+      String(current + 1).padStart(2,'0') +
+      ' / ' +
+      String(cards.length).padStart(2,'0');
+  }
+
+
+  function moveGallery(direction){
+
+    if(!track || !cards.length) return;
+
+    var current = 0;
+    var smallestDistance = Infinity;
+
+    cards.forEach(function(card, i){
+
+      var distance =
+        Math.abs(
+          card.offsetLeft -
+          track.scrollLeft
+        );
+
+      if(distance < smallestDistance){
+        smallestDistance = distance;
+        current = i;
+      }
+
+    });
+
+    var target =
+      Math.max(
+        0,
+        Math.min(
+          cards.length - 1,
+          current + direction
+        )
+      );
+
+    cards[target].scrollIntoView({
+      behavior:'smooth',
+      block:'nearest',
+      inline:'start'
+    });
+
+  }
+
+
+  if(prev){
+    prev.addEventListener(
+      'click',
+      function(){
+        moveGallery(-1);
+      }
+    );
+  }
+
+  if(next){
+    next.addEventListener(
+      'click',
+      function(){
+        moveGallery(1);
+      }
+    );
+  }
+
+  if(track){
+    track.addEventListener(
+      'scroll',
+      updateGalleryIndex,
+      {passive:true}
+    );
+  }
+
+  updateGalleryIndex();
+
+})();
 </script>
 
 </body>
