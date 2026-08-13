@@ -166,9 +166,9 @@
     letter-spacing:.02em;
   }
 
-  /* ---------- Hero ---------- */
-  .hero-sheet{position:relative;padding-top:calc(var(--tb-height) + 74px);overflow:hidden;}
-  .hero-bg{position:absolute;right:-40px;bottom:-10px;width:min(560px,60%);opacity:.5;pointer-events:none;}
+  /* ---------- start ---------- */
+  .start-sheet{position:relative;padding-top:calc(var(--tb-height) + 74px);overflow:hidden;}
+  .start-bg{position:absolute;right:-40px;bottom:-10px;width:min(560px,60%);opacity:.5;pointer-events:none;}
   .dwg-no{
     font-family:var(--font-mono);
     font-size:12.5px;
@@ -176,7 +176,7 @@
     color:var(--ink-soft);
     margin-bottom:22px;
   }
-  .hero-sheet h1{
+  .start-sheet h1{
     font-size:clamp(34px,6vw,60px);
     font-weight:700;
     letter-spacing:-.015em;
@@ -196,7 +196,7 @@
     font-size:17px;
     color:var(--ink-soft);
   }
-  .hero-meta{
+  .start-meta{
     display:flex;
     flex-wrap:wrap;
     gap:16px;
@@ -551,7 +551,7 @@
     .project-grid{grid-template-columns:1fr;}
     .xp-row{grid-template-columns:1fr;gap:6px;}
     .edu-skills-grid{grid-template-columns:1fr;gap:8px;}
-    .hero-bg{opacity:.3;width:75%;}
+    .start-bg{opacity:.3;width:75%;}
     .sheet{padding-top:calc(var(--tb-height) + 40px);padding-bottom:48px;}
   }
 
@@ -574,32 +574,32 @@
 <header class="titlebar">
   <a href="#top" class="tb-id">JJV</a>
   <nav class="tb-nav" aria-label="Navegación de secciones">
-    <a href="#hero" data-sheet="1" class="tb-tick active">
+    <a href="start" data-sheet="1" class="tb-tick active">
       <span class="tick-num">01</span>
       <span class="tick-label">Start</span>
     </a>
   
-    <a href="#proyectos" data-sheet="2" class="tb-tick">
+    <a href="projects" data-sheet="2" class="tb-tick">
       <span class="tick-num">02</span>
       <span class="tick-label">Projects</span>
     </a>
   
-    <a href="#galeria" data-sheet="3" class="tb-tick">
+    <a href="gallery" data-sheet="3" class="tb-tick">
       <span class="tick-num">03</span>
       <span class="tick-label">Designs</span>
     </a>
   
-    <a href="#experiencia" data-sheet="4" class="tb-tick">
+    <a href="experience" data-sheet="4" class="tb-tick">
       <span class="tick-num">04</span>
       <span class="tick-label">Experience</span>
     </a>
   
-    <a href="#educacion" data-sheet="5" class="tb-tick">
+    <a href="education" data-sheet="5" class="tb-tick">
       <span class="tick-num">05</span>
       <span class="tick-label">Education</span>
     </a>
   
-    <a href="#contacto" data-sheet="6" class="tb-tick">
+    <a href="contact" data-sheet="6" class="tb-tick">
       <span class="tick-num">06</span>
       <span class="tick-label">Contact</span>
     </a>
@@ -608,9 +608,9 @@
 
 <main id="top">
 
-  <!-- ============ SHEET 01 — HERO ============ -->
-  <section id="hero" class="sheet hero-sheet" data-sheet-num="01">
-    <div class="hero-bg" aria-hidden="true">
+  <!-- ============ SHEET 01 — start ============ -->
+  <section id="start" class="sheet start-sheet" data-sheet-num="01">
+    <div class="start-bg" aria-hidden="true">
       <svg viewBox="0 0 520 200" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M10,128 C34,64 148,32 340,38 C430,41 486,52 508,64 C476,76 372,92 244,97 C138,101 56,113 10,128 Z"
               stroke="#1D4E89" stroke-width="1.4" opacity="0.5"/>
@@ -626,7 +626,7 @@
     <p class="tagline">Mechatronics foundation. Skilled in analytical and simulation-driven design, along with the 
 practical side of manufacturing, including prototyping, GD&T documentation, and design-for-manufacturability. Comfortable 
 validating a concept in simulation and then refining it with cross-functional teams.</p>
-    <div class="hero-meta">
+    <div class="start-meta">
       <span class="badge-status">Open to relocation</span>
       <span>Nuevo León, México</span>
     </div>
@@ -636,8 +636,8 @@ validating a concept in simulation and then refining it with cross-functional te
     </div>
   </section>
 
-  <!-- ============ SHEET 02 — PROYECTOS ============ -->
-  <section id="proyectos" class="sheet" data-sheet-num="02">
+  <!-- ============ SHEET 02 — projects ============ -->
+  <section id="projects" class="sheet" data-sheet-num="02">
     <div class="sheet-titleblock">
       <span class="sheet-eyebrow">SHEET 02/06</span>
       <h2>Featured projects</h2>
@@ -706,7 +706,7 @@ validating a concept in simulation and then refining it with cross-functional te
     </div>
   </section>
   <!-- ============ SHEET 03 — DESIGN GALLERY ============ -->
-  <section id="galeria" class="sheet" data-sheet-num="03">
+  <section id="gallery" class="sheet" data-sheet-num="03">
   
     <div class="sheet-titleblock">
       <span class="sheet-eyebrow">SHEET 03/06</span>
@@ -857,8 +857,8 @@ validating a concept in simulation and then refining it with cross-functional te
     </div>
   
   </section>
-  <!-- ============ SHEET 03 — EXPERIENCIA ============ -->
-  <section id="experiencia" class="sheet" data-sheet-num="04">
+  <!-- ============ SHEET 03 — experience ============ -->
+  <section id="experience" class="sheet" data-sheet-num="04">
     <div class="sheet-titleblock">
       <span class="sheet-eyebrow">SHEET 04/06</span>
       <h2>Professional experience</h2>
@@ -902,7 +902,7 @@ validating a concept in simulation and then refining it with cross-functional te
   </section>
 
   <!-- ============ SHEET 04 — EDUCACIÓN + HABILIDADES ============ -->
-  <section id="educacion" class="sheet" data-sheet-num="05">
+  <section id="education" class="sheet" data-sheet-num="05">
     <div class="sheet-titleblock">
       <span class="sheet-eyebrow">SHEET 05/06</span>
       <h2>Education &amp; Skills</h2>
@@ -953,8 +953,8 @@ validating a concept in simulation and then refining it with cross-functional te
 
 </main>
 
-<!-- ============ SHEET 05 — CONTACTO ============ -->
-<footer id="contacto" class="sheet dark-sheet" data-sheet-num="06">
+<!-- ============ SHEET 05 — contact ============ -->
+<footer id="contact" class="sheet dark-sheet" data-sheet-num="06">
   <div class="contact-inner">
     <span class="sheet-eyebrow">SHEET 06/06</span>
     <h2>Let’s work together.</h2>
