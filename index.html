@@ -238,6 +238,37 @@
     border:1px solid var(--line);
     background:var(--paper-alt);
     padding:18px;
+    transform-style:preserve-3d;
+    transition:
+      transform .18s ease-out,
+      box-shadow .18s ease-out;
+    will-change:transform;
+    overflow:hidden;
+  }
+  
+  .project-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:0;
+    background:
+      radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255,255,255,.38),
+        transparent 38%
+      );
+    transition:opacity .2s ease;
+    z-index:10;
+  }
+  
+  .project-card.is-tilting::before{
+    opacity:1;
+  }
+  
+  .project-card.is-tilting{
+    box-shadow:
+      0 12px 24px rgba(20,24,28,.12);
   }
   .card-reg{position:absolute;inset:0;pointer-events:none;}
   .card-reg::before,.card-reg::after{
@@ -1020,6 +1051,43 @@ validating a concept in simulation and then refining it with cross-functional te
   updateGalleryIndex();
 
 })();
+    var cards = Array.prototype.slice.call(
+      document.querySelectorAll('.project-card')
+    );
+
+    cards.forEach(function(card){
+
+      card.addEventListener('mousemove', function(e){
+
+        var rect = card.getBoundingClientRect();
+
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+
+        var centerX = rect.width / 2;
+        var centerY = rect.height / 2;
+
+        var rotateY = ((x - centerX) / centerX) * 5;
+        var rotateX = ((centerY - y) / centerY) * 5;
+
+        card.style.setProperty('--mouse-x', x + 'px');
+        card.style.setProperty('--mouse-y', y + 'px');
+
+        card.style.transform =
+          'perspective(900px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-4px)';
+
+        card.classList.add('is-tilting');
+      });
+
+      card.addEventListener('mouseleave', function(){
+
+        card.style.transform =
+          'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0)';
+
+        card.classList.remove('is-tilting');
+      });
+
+    });
 </script>
 
 </body>
