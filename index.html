@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio by Josue JV</title>
+<meta name="description" content="Portfolio of Josué Jiménez Villarreal, Aeronautical Engineer — structural design, FEA/CFD simulation, and composite materials.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Tokens ---------- */
+  :root{
+    --paper:#F4F5F1;
+    --paper-alt:#E9EBE3;
+    --ink:#14181C;
+    --ink-soft:#59636C;
+    --line:#CBD0C8;
+    --line-strong:#A9B0A6;
+    --blueprint:#1D4E89;
+    --blueprint-dim:#E3EAF1;
+    --blueprint-light:#7FADDD;
+    --rust:#9C4A2C;
+    --rust-dim:#F1E3DB;
+    --dark:#12161B;
+    --dark-line:#2B333A;
+    --dark-text:#F1F2ED;
+    --font-sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'SF Mono',Consolas,monospace;
+    
+    /* Layout Variables */
+    --sidebar-width: 160px;
+    --tb-height: 64px;
+    --frame-inset: 14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  
+  /* 1. Cursor de precisión (Crosshair) */
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    cursor: crosshair; 
+  }
+  
+  h1,h2,h3,p,ul{margin:0;}
+  ul{list-style:none;padding:0;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+
+  /* Excepciones del cursor para elementos clickeables */
+  a, button, .btn, .tb-tick {
+    cursor: pointer;
+  }
+
+  a:focus-visible,
+  button:focus-visible{
+    outline:2px solid var(--blueprint);
+    outline-offset:3px;
+  }
+
+  /* ---------- Atmosphere: grid backdrop + sheet frame ---------- */
+  .grid-bg{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background-image:
+      linear-gradient(rgba(20,24,28,.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20,24,28,.055) 1px, transparent 1px);
+    background-size:34px 34px;
+    will-change: background-position;
+  }
+  .sheet-frame{
+    position:fixed;
+    top:var(--frame-inset);
+    left:calc(var(--sidebar-width) + var(--frame-inset));
+    right:var(--frame-inset);
+    bottom:var(--frame-inset);
+    border:1px solid var(--line);
+    z-index:5;
+    pointer-events:none;
+  }
+  .reg{position:absolute;width:14px;height:14px;}
+  .reg::before,.reg::after{content:"";position:absolute;background:var(--line-strong);}
+  .reg::before{width:14px;height:1px;top:6px;left:0;}
+  .reg::after{width:1px;height:14px;left:6px;top:0;}
+  .reg-tl{top:-7px;left:-7px;}
+  .reg-tr{top:-7px;right:-7px;}
+  .reg-bl{bottom:-7px;left:-7px;}
+  .reg-br{bottom:-7px;right:-7px;}
+
+  /* ---------- Title bar / nav (Vertical) ---------- */
+  .titlebar{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    width:var(--sidebar-width);
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:flex-start;
+    padding:40px 20px;
+    background:rgba(244,245,241,.75);
+    backdrop-filter:blur(6px);
+    border-right:1px solid var(--line);
+    z-index:50;
+  }
+  .tb-id{
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:.06em;
+    border:1px solid var(--ink);
+    padding:5px 9px;
+    margin-bottom:40px;
+  }
+  .tb-nav{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    width:100%;
+  }
+  
+  /* Animación magnética base */
+  .tb-tick{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.06em;
+    color:var(--ink-soft);
+    border-left:2px solid transparent;
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), color .2s ease, border-color .2s ease;
+    will-change: transform;
+    width:100%;
+  }
+  .tick-num{opacity:.7;}
+  .tb-tick:hover{color:var(--ink);}
+  .tb-tick.active{
+    color:var(--blueprint);
+    border-left-color:var(--blueprint);
+  }
+
+  /* ---------- Shared sheet layout ---------- */
+  main, footer.dark-sheet {
+    margin-left: var(--sidebar-width);
+    padding-left: calc(var(--frame-inset) + 40px);
+    padding-right: calc(var(--frame-inset) + 40px);
+  }
+  
+  .sheet{
+    padding-top:80px;
+    padding-bottom:80px;
+    width:min(1500px, 100%);
+    margin:0 auto;
+    opacity:0;
+    transform:translateY(35px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .sheet.in-view{opacity:1;transform:translateY(0);}
+
+  /* 3. Trazado de líneas (Line Drawing) - Modificado para excluir la experiencia */
+  .sheet-titleblock, .edu-entry {
+    position: relative;
+    border-bottom: none;
+  }
+
+  .sheet-titleblock::after, .edu-entry::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    background: var(--line);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .edu-entry:last-child::after {
+    display: none;
+  }
+
+  .sheet.in-view .sheet-titleblock::after { transform: scaleX(1); transition-delay: 0.2s; }
+  .sheet.in-view .edu-entry::after { transform: scaleX(1); transition-delay: 0.3s; }
+
+  .sheet-titleblock{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:34px;
+    padding-bottom:16px;
+  }
+  .sheet-eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.08em;
+    color:var(--blueprint);
+    border:1px solid var(--blueprint);
+    padding:3px 8px;
+  }
+  .sheet-titleblock h2{
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:-.01em;
+  }
+  .sheet-note{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--ink-soft);
+    letter-spacing:.02em;
+  }
+
+  /* ---------- start ---------- */
+  .start-sheet{position:relative;padding-top:120px;overflow:hidden;}
+  .start-bg{position:absolute;right:-40px;bottom:-10px;width:min(560px,60%);opacity:.5;pointer-events:none;}
+  .dwg-no{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:.06em;
+    color:var(--ink-soft);
+    margin-bottom:22px;
+  }
+  .start-sheet h1{
+    font-size:clamp(34px,6vw,60px);
+    font-weight:700;
+    letter-spacing:-.015em;
+    line-height:1.05;
+    max-width:14ch;
+  }
+  .role{
+    font-family:var(--font-mono);
+    font-size:14px;
+    letter-spacing:.04em;
+    color:var(--blueprint);
+    margin-top:16px;
+  }
+  .tagline{
+    max-width:56ch;
+    margin-top:22px;
+    font-size:17px;
+    color:var(--ink-soft);
+  }
+  .start-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    align-items:center;
+    margin-top:28px;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .badge-status{
+    display:inline-flex;align-items:center;gap:6px;
+    color:var(--blueprint);
+  }
+  .badge-status::before{
+    content:"";width:7px;height:7px;border-radius:50%;
+    background:var(--blueprint);
+  }
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;}
+  
+  /* Botones Magnéticos: Base CSS */
+  .btn{
+    display: inline-block;
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:.04em;
+    padding:13px 20px;
+    border:1px solid var(--ink);
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), background .2s ease, color .2s ease, border-color .2s ease;
+    will-change: transform;
+  }
+  .btn-primary{background:var(--ink);color:var(--paper);}
+  .btn-primary:hover{background:var(--blueprint);border-color:var(--blueprint);}
+  .btn-outline:hover{background:var(--ink);color:var(--paper);}
+
+  /* ---------- Projects ---------- */
+  .project-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+  }
+  .project-card{
+    position:relative;
+    border:1px solid var(--line);
+    background:var(--paper-alt);
+    padding:18px;
+    transform-style:preserve-3d;
+    transform-origin:center;
+    transition:transform .5s cubic-bezier(.22,1,.36,1), box-shadow .4s ease-out;
+    will-change:transform;
+    overflow:hidden;
+  }
+
+  .project-card.is-tilting{
+    transition:transform .08s ease-out, box-shadow .15s ease-out;
+  }
+
+  .project-card::before{
+    content:"";
+    position:absolute;
+    inset:-50%;
+    pointer-events:none;
+    opacity:0;
+    background:radial-gradient(
+      circle at var(--mouse-x) var(--mouse-y),
+      rgba(255,255,255,.75) 0%,
+      rgba(255,255,255,.25) 15%,
+      transparent 40%
+    );
+    transition:opacity .2s ease;
+    z-index:20;
+  }
+
+  .project-card.is-tilting::before{
+    opacity:1;
+  }
+
+  .project-card.is-tilting{
+    box-shadow:0 20px 35px rgba(20,24,28,.2);
+  }
+  .card-reg{position:absolute;inset:0;pointer-events:none;}
+  .card-reg::before,.card-reg::after{
+    content:"";position:absolute;width:10px;height:10px;
+  }
+  .card-reg::before{top:-1px;left:-1px;border-top:2px solid var(--ink);border-left:2px solid var(--ink);}
+  .card-reg::after{bottom:-1px;right:-1px;border-bottom:2px solid var(--ink);border-right:2px solid var(--ink);}
+
+  .project-img{
+    aspect-ratio:16/10;
+    width:100%;
+    object-fit:cover;
+    border:1px solid var(--line);
+    margin-bottom:16px;
+  }
+
+  .tag-cat{
+    display:inline-block;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.06em;
+    padding:4px 9px;
+    border:1px solid currentColor;
+    margin-bottom:12px;
+  }
+  .tag-diseno{color:var(--blueprint);background:var(--blueprint-dim);}
+  .tag-experimento{color:var(--rust);background:var(--rust-dim);}
+
+  .project-card h3{
+    font-size:19px;
+    font-weight:600;
+    margin-bottom:10px;
+    letter-spacing:-.005em;
+  }
+  .project-card p{color:var(--ink-soft);font-size:15px;}
+  .tool-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .tool-tags span{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.03em;
+    color:var(--ink-soft);
+    border:1px solid var(--line-strong);
+    padding:3px 8px;
+  }
+  
+  /* ---------- Experience (Vertical Carousel Cards) ---------- */
+  .xp-list{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+
+  .xp-card{
+    display:grid;
+    grid-template-columns:1fr 2fr;
+    gap:18px;
+    padding:28px;
+    background:var(--paper-alt);
+    border:1px solid var(--line);
+    transition:all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    position:relative;
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  .xp-card.xp-in-view{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* Efecto Carousel dinámico al pasar el mouse */
+  .xp-list:hover .xp-card {
+    opacity:0.4;
+    filter:grayscale(60%);
+  }
+
+  .xp-list .xp-card:hover {
+    opacity:1;
+    filter:grayscale(0%);
+    transform:translateY(-6px);
+    box-shadow:0 20px 40px rgba(20,24,28,0.1);
+    border-color:var(--blueprint);
+    background:var(--paper);
+    z-index:10;
+  }
+
+  .xp-head strong{display:block;font-size:16px;font-weight:600;}
+  .xp-head span{
+    display:block;
+    margin-top:4px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--ink-soft);
+    letter-spacing:.03em;
+  }
+  .xp-body ul{
+    margin:0;
+    padding-left:18px;
+    list-style:disc;
+  }
+  
+  .xp-body li{
+    color:var(--ink-soft);
+    font-size:15px;
+    margin-bottom:7px;
+    opacity:0;
+    transform:translateY(12px);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  
+  .xp-body li:last-child{
+    margin-bottom:0;
+  }
+
+  /* Animación de los puntos de la experiencia */
+  .xp-card.xp-in-view .xp-body li{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  .xp-body li:nth-child(1){transition-delay:0s;}
+  .xp-body li:nth-child(2){transition-delay:.15s;}
+  .xp-body li:nth-child(3){transition-delay:.3s;}
+  .xp-body li:nth-child(4){transition-delay:.45s;}
+  .xp-body li:nth-child(5){transition-delay:.6s;}
+  
+  .company-heading{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  
+  .company-logo{
+    width:42px;
+    height:28px;
+    object-fit:contain;
+    flex-shrink:0;
+  }
+  
+  /* ---------- Education + Skills ---------- */
+  .edu-skills-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+  }
+  .edu-entry{padding-bottom:20px;margin-bottom:20px;}
+  .edu-entry:last-child{margin-bottom:0;}
+  .edu-entry strong{display:block;font-size:16px;font-weight:600;}
+  .edu-entry span{
+    display:block;margin-top:4px;
+    font-family:var(--font-mono);font-size:12px;
+    color:var(--ink-soft);letter-spacing:.03em;
+  }
+  .edu-entry p{margin-top:8px;color:var(--ink-soft);font-size:14.5px;}
+
+  .skill-group{margin-bottom:20px;}
+  .skill-group h4{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:.07em;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+    text-transform:uppercase;
+  }
+  .skill-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .skill-pills span{
+    font-size:13.5px;
+    padding:5px 11px;
+    border:1px solid var(--line-strong);
+    background:var(--paper-alt);
+  }
+
+  /* ---------- Footer / contact sheet ---------- */
+  footer.dark-sheet{
+    background:var(--dark);
+    color:var(--dark-text);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding-top:80px;
+    padding-bottom:40px;
+    border-bottom:none;
+    width: auto;
+    max-width: none;
+    margin-right: 0;
+  }
+  
+  .contact-inner{
+    max-width:1120px;
+    margin:0 auto;
+    text-align:center;
+    width: 100%;
+  }
+  .contact-inner .sheet-eyebrow{color:var(--blueprint-light);border-color:var(--blueprint-light);}
+  .contact-inner h2{
+    font-size:clamp(28px,5vw,42px);
+    font-weight:700;
+    margin:22px 0 14px;
+    letter-spacing:-.01em;
+  }
+  .contact-inner .tagline{
+    color:#B7BEC4;
+    margin:0 auto 30px;
+  }
+  .contact-inner .cta-row{justify-content:center;}
+  footer .btn-primary{background:var(--blueprint-light);border-color:var(--blueprint-light);color:var(--dark);}
+  footer .btn-primary:hover{background:var(--dark-text);border-color:var(--dark-text);}
+  footer .btn-outline{border-color:var(--dark-text);color:var(--dark-text);}
+  footer .btn-outline:hover{background:var(--dark-text);color:var(--dark);}
+  
+  /* Footer line drawing adjust */
+  footer .sheet-eyebrow, footer .sign-off { position: relative; z-index: 1; }
+  
+  .sign-off{
+    margin-top:56px;
+    padding-top:20px;
+    border-top:1px solid var(--dark-line);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:.05em;
+    color:#8F98A0;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:760px){
+    :root{
+      --tb-height:52px;
+      --frame-inset:7px;
+      --sidebar-width:0px; /* Collapse sidebar on mobile */
+    }
+    
+    .titlebar{
+      flex-direction:row;
+      height:var(--tb-height);
+      width:100%;
+      bottom:auto;
+      padding:0 22px;
+      align-items:center;
+      justify-content:space-between;
+      border-right:none;
+      border-bottom:1px solid var(--line);
+    }
+    .tb-id{margin-bottom:0;}
+    .tb-nav{flex-direction:row;gap:4px;}
+    .tb-tick{
+      border-left:none;
+      border-bottom:2px solid transparent;
+      padding:6px 7px;
+      width:auto;
+    }
+    .tb-tick.active{
+      border-left-color:transparent;
+      border-bottom-color:var(--blueprint);
+    }
+    .tick-label{display:none;}
+    
+    .sheet-frame{
+      top:calc(var(--tb-height) + var(--frame-inset));
+      left:var(--frame-inset);
+    }
+    
+    main,footer.dark-sheet{
+      margin-left: 0;
+      padding-left:calc(var(--frame-inset) + 16px);
+      padding-right:calc(var(--frame-inset) + 16px);
+    }
+    
+    .project-grid{grid-template-columns:1fr;}
+    .xp-card{grid-template-columns:1fr; gap:12px; padding:20px;}
+    .edu-skills-grid{grid-template-columns:1fr; gap:8px;}
+    .start-bg{opacity:.3;width:75%;}
+    .sheet{padding-top:calc(var(--tb-height) + 40px);padding-bottom:48px;}
+    .start-sheet{padding-top:calc(var(--tb-height) + 60px);}
+    footer.dark-sheet{min-height:calc(100vh - var(--tb-height));}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .sheet{opacity:1;transform:none;transition:none;}
+    .xp-body li{opacity:1;transform:none;transition:none;}
+    .project-card, .xp-card{transition:none;}
+    .grid-bg{transform:none !important;}
+    .btn, .tb-tick {transform:none !important;}
+  }
+
+  /* Excluir el footer de la regla del margen superior para que abarque la pantalla completa */
+  section { scroll-margin-top: 40px; }
+  footer { scroll-margin-top: 0; }
+  
+  @media (max-width:760px){
+    section { scroll-margin-top: calc(var(--tb-height) + 10px); }
+    footer { scroll-margin-top: 0; }
+  }
+</style>
+
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BD15994HHM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BD15994HHM');
+</script>
+</head>
+<body>
+
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="sheet-frame" aria-hidden="true">
+  <span class="reg reg-tl"></span><span class="reg reg-tr"></span>
+  <span class="reg reg-bl"></span><span class="reg reg-br"></span>
+</div>
+
+<header class="titlebar">
+  <a href="#top" class="tb-id">JJV</a>
+  <nav class="tb-nav" aria-label="Section Navigation">
+    <a href="#start" data-sheet="1" class="tb-tick active">
+      <span class="tick-num">01</span>
+      <span class="tick-label">Start</span>
+    </a>
+  
+    <a href="#projects" data-sheet="2" class="tb-tick">
+      <span class="tick-num">02</span>
+      <span class="tick-label">Projects</span>
+    </a>
+  
+    <a href="#experience" data-sheet="4" class="tb-tick">
+      <span class="tick-num">03</span>
+      <span class="tick-label">Experience</span>
+    </a>
+  
+    <a href="#education" data-sheet="5" class="tb-tick">
+      <span class="tick-num">04</span>
+      <span class="tick-label">Education</span>
+    </a>
+  
+    <a href="#contact" data-sheet="6" class="tb-tick">
+      <span class="tick-num">05</span>
+      <span class="tick-label">Contact</span>
+    </a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============ SHEET 01 — start ============ -->
+  <section id="start" class="sheet start-sheet" data-sheet-num="01">
+    <p class="dwg-no">DWG NO. JJV—2026 · SHEET 01/05 · REV A</p>
+    <h1>JOSUÉ JIMÉNEZ<br>VILLARREAL</h1>
+    <p class="role">ENGINEER IN AERONAUTICS — DESIGN, MANUFACTURING &amp; SIMULATION</p>
+    <p class="tagline">Mechatronics foundation. Skilled in analytical and simulation-driven design, along with the 
+practical side of manufacturing, including prototyping, GD&T documentation, and design-for-manufacturability. Comfortable 
+validating a concept in simulation and then refining it with cross-functional teams.</p>
+    <div class="start-meta">
+      <span class="badge-status">Open to relocation</span>
+      <span>Nuevo León, México</span>
+    </div>
+    <div class="cta-row">
+      <a href="images/CV.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline">CV</a>
+      <span class="btn btn-primary">josues58@outlook.com</span>
+      <a href="https://www.linkedin.com/in/josue-jimenez-villarreal" target="_blank" rel="noopener noreferrer" class="btn btn-outline">LinkedIn ↗</a>
+    </div>
+  </section>
+
+  <!-- ============ SHEET 02 — projects ============ -->
+  <section id="projects" class="sheet" data-sheet-num="02">
+    <div class="sheet-titleblock">
+      <span class="sheet-eyebrow">SHEET 02/05</span>
+      <h2>Featured projects</h2>
+      <span class="sheet-note">Projects developed during my academic and professional careers</span>
+    </div>
+
+    <div class="project-grid">
+
+      <!-- Proyecto 1 -->
+      <article class="project-card">
+        <div class="card-reg" aria-hidden="true"></div>
+        <img
+          class="project-img"
+          src="images/aero.png"
+          alt="Structure optimization">
+        <span class="tag-cat tag-diseno">Design</span>
+        <h3>Structure optimization</h3>
+        <p>Designed aircraft structures using analytical calculations, CFD, wind tunnel testing, and FEA to optimize aerodynamic and 
+            structural performance while reducing weight and material usage by 25%.</p>
+        <div class="tool-tags"><span>CFD</span><span>FEA</span><span>Wind tunnel</span><span>Analytic calculus</span></div>
+      </article>
+
+      <!-- Proyecto 2 -->
+      <article class="project-card">
+        <div class="card-reg" aria-hidden="true"></div>
+        <img
+          class="project-img"
+          src="images/COMP2.png"
+          alt="Design and fabrication of composite laminates">
+        <span class="tag-cat tag-diseno">Design</span>
+        <h3>Design and fabrication of composite laminates</h3>
+        <p>Designed and fabricated composite laminates using carbon fiber, fiberglass, and honeycomb cores, optimizing stacking 
+            sequence, fiber orientation, and thickness through ANSYS ACP simulations, then cured parts via vacuum bagging, 
+            autoclave, and manual layup techniques. </p>
+        <div class="tool-tags"><span>ANSYS ACP</span><span>Carbon fiber</span><span>Honeycomb</span><span>Vacuum bagging</span><span>Autoclave</span></div>
+      </article>
+
+      <!-- Proyecto 3 -->
+      <article class="project-card">
+        <div class="card-reg" aria-hidden="true"></div>
+        <img
+          class="project-img"
+          src="images/3d.png"
+          alt="Prototyping and assembly validation">
+        <span class="tag-cat tag-diseno">Design</span>
+        <h3>Prototyping and assembly validation</h3>
+        <p>Created and validated prototypes, fixtures, and enclosures using Creo, SolidWorks, and FDM 3D printing to verify fit, 
+            assembly, tolerances, and functionality. </p>
+        <div class="tool-tags"><span>Creo Parametric</span><span>SolidWorks</span><span>3D Printing (FDM)</span></div>
+      </article>
+
+      <!-- Proyecto 4 -->
+      <article class="project-card">
+        <div class="card-reg" aria-hidden="true"></div>
+      
+        <img
+          class="project-img"
+          src="images/EM.png"
+          alt="Characterization of magnetorheological elastomers">
+        <span class="tag-cat tag-experimento">Experimental</span>
+        <h3>Characterization of magnetorheological elastomers</h3>
+        <p>Characterized magnetorheological elastomers through vibration testing and MATLAB/Python data analysis to evaluate 
+            material behavior under magnetic activation.</p>
+        <div class="tool-tags"><span>Vibration tests</span><span>MATLAB</span><span>Python</span></div>
+      </article>
+
+    </div>
+  </section>
+  
+  <!-- ============ SHEET 03 — experience ============ -->
+  <section id="experience" class="sheet" data-sheet-num="04">
+    <div class="sheet-titleblock">
+      <span class="sheet-eyebrow">SHEET 03/05</span>
+      <h2>Professional experience</h2>
+      <p class="sheet-note">Key points</p>
+    </div>
+
+    <!-- CAMBIO: Listado tipo Carousel Vertical -->
+    <div class="xp-list">
+      
+      <div class="xp-card">
+        <div class="xp-head">
+          <div class="company-heading">
+            <strong>ABB</strong>
+            <img src="images/abb-logo.png" alt="ABB logo" class="company-logo">
+          </div>
+          <span>Lean Challenge Intern · Jun–Ago 2026</span>
+        </div>
+        
+        <div class="xp-body">
+          <ul>
+            <li>Part of the winning team in ABB's international Lean Challenge.</li>
+            <li>Redesigned assembly processes and production layouts.</li>
+            <li>Reduced cycle time by up to 70%.</li>
+            <li>Developed CAD solutions and validated their implementation on the production line.</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="xp-card">
+        <div class="xp-head">
+          <div class="company-heading">
+            <strong>John Deere</strong>
+            <img src="images/john-deere-logo.png" alt="John Deere logo" class="company-logo">
+          </div>
+          <span>Mechanical Design Intern · Ago 2024–May 2026</span>
+        </div>
+        
+        <div class="xp-body">
+          <ul>
+            <li>Designed and modified sheet metal and plate brackets, castings, and injection-molded parts for agricultural machinery, 
+                balancing load, weight, material, and cost constraints.</li>
+            <li>Created 3D models (Creo parametric) and drawings with GD&T, ensuring compliance with engineering standards.</li>
+            <li>Performed structural validation using FEA (SimSolid), iterating designs based on analysis results and design reviews.</li>
+            <li>Assisted in managing product structures and supporting BOM definition using PLM (PTC Windchill)</li>
+          </ul>
+        </div>    
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- ============ SHEET 04 — EDUCACIÓN + HABILIDADES ============ -->
+  <section id="education" class="sheet" data-sheet-num="05">
+    <div class="sheet-titleblock">
+      <span class="sheet-eyebrow">SHEET 04/05</span>
+      <h2>Education &amp; Skills</h2>
+    </div>
+
+    <div class="edu-skills-grid">
+      <div>
+        <div class="edu-entry">
+          <strong>B.S. in Aeronautical Engineering</strong>
+          <span>Universidad Autónoma de Nuevo León · Aug 2020 – Jun 2026</span>
+          <p>Selected among the top 100 students with the highest academic performance within the Faculty of Mechanical and 
+             Electrical Engineering (FIME) during the August–December 2025 semester.</p>
+        </div>
+        <div class="edu-entry">
+          <strong>Technical Degree in Mechatronics</strong>
+          <span>Universidad Autónoma de Nuevo León · Jul 2021 – Dec 2022</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="skill-group">
+          <h4>CAD</h4>
+          <div class="skill-pills"><span>Creo Parametric</span><span>SolidWorks</span><span>AutoCAD</span></div>
+        </div>
+        <div class="skill-group">
+          <h4>CAE</h4>
+          <div class="skill-pills"><span>SimSolid</span><span>ANSYS Structural</span><span>ANSYS Fluent</span><span>ANSYS ACP</span></div>
+        </div>
+        <div class="skill-group">
+          <h4>Programming</h4>
+          <div class="skill-pills"><span>MATLAB</span><span>Python</span></div>
+        </div>
+        <div class="skill-group">
+          <h4>PLM</h4>
+          <div class="skill-pills"><span>PTC Windchill</span></div>
+        </div>
+        <div class="skill-group">
+          <h4>Languages</h4>
+          <div class="skill-pills"><span>English (fluent)</span></div>
+        </div>
+        <div class="skill-group">
+          <h4>Certifications</h4>
+          <div class="skill-pills"><span>CSWA</span><span>Lean Manufacturing</span><span>Failure analysis — UANL</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ SHEET 05 — contact ============ -->
+<footer id="contact" class="sheet dark-sheet" data-sheet-num="06">
+  <div class="contact-inner">
+    <span class="sheet-eyebrow">SHEET 05/05</span>
+    <h2>Let’s work together.</h2>
+    <p class="tagline">Open to engineering opportunities in design, simulation, and manufacturing. I’d be happy to share more details about any of these projects.
+</p>
+    <div class="cta-row">
+      <a href="images/CV.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline">CV</a>
+      <span class="btn btn-primary">josues58@outlook.com</span>
+      <a href="https://www.linkedin.com/in/josue-jimenez-villarreal" target="_blank" rel="noopener noreferrer" class="btn btn-outline">LinkedIn ↗</a>
+    </div>
+    <div class="sign-off">
+      <span>JOSUÉ JIMÉNEZ VILLARREAL — NUEVO LEÓN, MÉXICO</span>
+      <span>JJV—2026 · SHEET 05/05 · END</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+(function(){
+  var ticks = Array.prototype.slice.call(document.querySelectorAll('.tb-tick'));
+  var sheets = Array.prototype.slice.call(document.querySelectorAll('.sheet'));
+
+  /* ---------- Sheet reveal animation ---------- */
+  var revealObserver = new IntersectionObserver(
+    function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+        }
+      });
+    },
+    { threshold:0.08 }
+  );
+
+  sheets.forEach(function(sheet){
+    revealObserver.observe(sheet);
+  });
+
+  /* ---------- Experience bullets reveal ---------- */
+  var xpCards = document.querySelectorAll('.xp-card'); /* CAMBIO a xp-card */
+
+  if(prefersReducedMotion){
+    xpCards.forEach(function(card){ card.classList.add('xp-in-view'); });
+  } else {
+    var xpObserver = new IntersectionObserver(
+      function(entries, observer){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            entry.target.classList.add('xp-in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold:0.2, rootMargin:'0px 0px -10% 0px' }
+    );
+    xpCards.forEach(function(card){ xpObserver.observe(card); });
+  }
+
+  /* ---------- Active navigation ---------- */
+  function updateActiveSection(){
+    var viewportCenter = window.innerHeight / 2;
+    var closestSheet = null;
+    var closestDistance = Infinity;
+
+    sheets.forEach(function(sheet){
+      var rect = sheet.getBoundingClientRect();
+      var sheetCenter = rect.top + (rect.height / 2);
+      var distance = Math.abs(viewportCenter - sheetCenter);
+
+      if(rect.bottom > 0 && rect.top < window.innerHeight && distance < closestDistance){
+        closestDistance = distance;
+        closestSheet = sheet;
+      }
+    });
+
+    if(!closestSheet) return;
+
+    var activeId = closestSheet.getAttribute('id');
+    ticks.forEach(function(tick){
+      tick.classList.toggle('active', tick.getAttribute('href') === '#' + activeId);
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveSection, {passive:true});
+  window.addEventListener('resize', updateActiveSection);
+  updateActiveSection();
+})();
+
+/* ---------- Hover Card Tilt 3D ---------- */
+var cards = document.querySelectorAll('.project-card');
+
+if(!prefersReducedMotion){
+  cards.forEach(function(card){
+    var pendingEvent = null;
+    var rafId = null;
+
+    function applyTilt(e){
+      rafId = null;
+      var rect = card.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+      var centerX = rect.width / 2;
+      var centerY = rect.height / 2;
+      var rotateX = ((centerY - y) / centerY) * 12;
+      var rotateY = ((x - centerX) / centerX) * 12;
+
+      card.style.setProperty('--mouse-x', x + 'px');
+      card.style.setProperty('--mouse-y', y + 'px');
+      card.style.transform = 'perspective(800px) scale3d(1.035,1.035,1.035) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-6px)';
+    }
+
+    card.addEventListener('mousemove', function(e){
+      card.classList.add('is-tilting');
+      pendingEvent = e;
+      if(rafId === null){
+        rafId = requestAnimationFrame(function(){ applyTilt(pendingEvent); });
+      }
+    });
+
+    card.addEventListener('mouseleave', function(){
+      if(rafId !== null){
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      card.classList.remove('is-tilting');
+      card.style.transform = 'perspective(800px) scale3d(1,1,1) rotateX(0deg) rotateY(0deg) translateY(0)';
+    });
+  });
+}
+
+/* ---------- 2. Technical Parallax Effect ---------- */
+const gridBg = document.querySelector('.grid-bg');
+window.addEventListener('scroll', () => {
+  if (!prefersReducedMotion) {
+    gridBg.style.backgroundPositionY = `${window.scrollY * 0.4}px`;
+  }
+}, { passive: true });
+
+/* ---------- 4. Magnetic Buttons ---------- */
+const magneticElements = document.querySelectorAll('.btn, .tb-tick');
+if (!prefersReducedMotion) {
+  magneticElements.forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      // Calculamos la distancia desde el centro del botón
+      const x = (e.clientX - rect.left - (rect.width / 2)) * 0.25; 
+      const y = (e.clientY - rect.top - (rect.height / 2)) * 0.25;
+      el.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = `translate(0px, 0px)`;
+    });
+  });
+}
+</script>
+
+</body>
+</html>
